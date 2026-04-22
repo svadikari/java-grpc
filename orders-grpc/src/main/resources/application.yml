@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: orders-grpc
+  jmx:
+    enabled: false
+  grpc:
+    server:
+      port: 9090
+    client:
+      channels:
+        product-service:
+          address: "static://localhost:9091"
+          negotiation-type: plaintext

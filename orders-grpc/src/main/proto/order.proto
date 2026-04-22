@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package="com.shyam.orders.grpc.proto";
+option java_outer_classname = "OrderProto";
+
+message OrderResponse {
+  repeated Order order=1;
+}
+
+message Order{
+  optional string id=1;
+  optional Status status=2;
+  repeated OrderItem items=3;
+  string createdBy=4;
+}
+
+message OrderItem {
+  string productId=1;
+  string productName=2;
+  double price=3;
+  int32 quantity=4;
+
+}
+
+enum Status {
+  NEW=0;
+  SOURCING=1;
+  RELEASED=2;
+  COMPLETED=3;
+
+}
+
+message Empty{}
+
+service OrderService{
+  rpc CreateOrder(Order) returns (Order){}
+  rpc GetOrders(Empty) returns (OrderResponse) {}
+}

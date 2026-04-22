@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: products-grpc
+  jmx:
+    enabled: false
+  grpc:
+    server:
+      port: 9091
