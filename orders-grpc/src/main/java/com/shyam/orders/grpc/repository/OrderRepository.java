@@ -5,8 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 @Repository
 public class OrderRepository {
     static List<Order> orders = new ArrayList<>();
@@ -18,7 +16,11 @@ public class OrderRepository {
         return orders;
     }
 
-    public Order getOrderById(UUID orderId) {
+    public Order getOrderById(String orderId) {
         return orders.stream().filter(order -> order.getId().equals(orderId)).findFirst().orElse(null);
+    }
+
+    public void addAllOrders(List<Order> ordersList) {
+        orders.addAll(ordersList);
     }
 }

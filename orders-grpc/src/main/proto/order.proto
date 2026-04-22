@@ -9,8 +9,8 @@ message OrderResponse {
 }
 
 message Order{
-  optional string id=1;
-  optional Status status=2;
+  string id=1;
+  Status status=2;
   repeated OrderItem items=3;
   string createdBy=4;
 }
@@ -34,6 +34,8 @@ enum Status {
 message Empty{}
 
 service OrderService{
-  rpc CreateOrder(Order) returns (Order){}
-  rpc GetOrders(Empty) returns (OrderResponse) {}
+  rpc createOrder(Order) returns (Order){}
+  rpc createBulkOrders(stream Order) returns (OrderResponse){}
+  rpc getOrders(Empty) returns (stream Order) {}
+  rpc getOrder(Order) returns (Order) {}
 }
