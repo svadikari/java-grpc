@@ -1,0 +1,33 @@
+syntax="proto3";
+
+option java_multiple_files=true;
+option java_package="com.shyam.product.grpc.proto";
+option java_outer_classname="ProductProto";
+
+message ProductRequest {
+  string name=1;
+  double price=2;
+  bool active=3;
+}
+
+message ProductResponse{
+  repeated Product products=1;
+}
+
+message Product{
+  string id=1;
+  string name=2;
+  double price=3;
+  bool active=4;
+}
+message Empty{}
+
+message ProductIdRequest{
+  string id=1;
+}
+
+service ProductService {
+  rpc CreateProduct(ProductRequest) returns (ProductResponse){};
+  rpc GetProducts(Empty) returns (ProductResponse){};
+  rpc GetProduct(ProductIdRequest) returns (Product){};
+}
