@@ -6,3 +6,13 @@ spring:
   grpc:
     server:
       port: 9090
+      ssl.bundle: product-ssl
+  ssl:
+    bundle:
+      jks:
+        product-ssl:
+          keystore:
+            location: classpath:certs/java-grpc.jks
+            password: java-grpc
+            type: JKS
+          key.password: java-grpc

@@ -12,9 +12,9 @@ public class ProductRepository {
     static List<Product> productList = new ArrayList<>();
 
   static {
-    productList.add(Product.newBuilder().setId(UUID.randomUUID().toString()).setName("Product 1").setPrice(1.11).setActive(true).build());
-    productList.add(Product.newBuilder().setId(UUID.randomUUID().toString()).setName("Product 2").setPrice(2.22).setActive(true).build());
-    productList.add(Product.newBuilder().setId(UUID.randomUUID().toString()).setName("Product 3").setPrice(3.33).setActive(true).build());
+    productList.add(Product.newBuilder().setId("111").setName("Product 1").setPrice(1.11).setActive(true).build());
+    productList.add(Product.newBuilder().setId("222").setName("Product 2").setPrice(2.22).setActive(true).build());
+    productList.add(Product.newBuilder().setId("333").setName("Product 3").setPrice(3.33).setActive(true).build());
     }
 
     public void addProduct(Product product) {

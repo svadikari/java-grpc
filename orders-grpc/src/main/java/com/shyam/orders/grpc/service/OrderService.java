@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 @GrpcService
@@ -75,6 +74,30 @@ public class OrderService extends OrderServiceGrpc.OrderServiceImplBase {
   }
 
   @Override
+  public StreamObserver<Order> createOrdersUsingStream(StreamObserver<Order> responseObserver) {
+    return new StreamObserver<>() {
+      @Override
+      public void onNext(Order order) {
+        log.info("Order received from: {} for {} items", order.getCreatedBy(), order.getItemsList().size());
+        order = order.toBuilder().setId(UUID.randomUUID().toString()).build();
+        orderRepository.addOrder(order);
+        responseObserver.onNext(order);
+      }
+
+      @Override
+      public void onError(Throwable throwable) {
+        responseObserver.onError(Status.INTERNAL.withDescription(throwable.getMessage()).asRuntimeException());
+      }
+
+      @Override
+      public void onCompleted() {
+        log.info("Orders creation completed...");
+        responseObserver.onCompleted();
+      }
+    };
+  }
+
+  @Override
   public void getOrders(Empty request, StreamObserver<Order> responseObserver) {
     List<Order> orders = orderRepository.getOrders();
     orders =
@@ -102,8 +125,14 @@ public class OrderService extends OrderServiceGrpc.OrderServiceImplBase {
   }
 
   private Product getProduct(String productId) {
-    Product product =
-            productServiceStub.getProduct(ProductIdRequest.newBuilder().setId(productId).build());
-    return Optional.ofNullable(product).orElse(Product.newBuilder().build());
+    try {
+      Product product =
+              productServiceStub.getProduct(ProductIdRequest.newBuilder().setId(productId).build());
+      return Optional.ofNullable(product).orElse(Product.newBuilder().build());
+    }catch (Exception ex){
+      log.error(ex.getMessage());
+      ex.printStackTrace();
+      return Product.newBuilder().build();
+    }
   }
 }

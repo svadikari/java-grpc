@@ -38,4 +38,5 @@ service OrderService{
   rpc createBulkOrders(stream Order) returns (OrderResponse){}
   rpc getOrders(Empty) returns (stream Order) {}
   rpc getOrder(Order) returns (Order) {}
+  rpc createOrdersUsingStream(stream Order) returns (stream Order){}
 }

@@ -67,6 +67,63 @@ Messages:
 * `OrderResponse`: repeated `order`
 * `Status`: `NEW`, `SOURCING`, `RELEASED`, `COMPLETED`
 
+== SSL Configuration
+- Create certificate
+
+----
+keytool -genkey -v -keystore java-grpc.jks -alias my-alias -keyalg RSA -keysize 2048 -validity 10000
+----
+- Add configurations in application yml file (move secrets to environment variable 😉)
+
+1. Server app configurations
+----
+  grpc:
+    server:
+      port: 9090
+      ssl.bundle: product-ssl
+  ssl:
+    bundle:
+      jks:
+        product-ssl:
+          keystore:
+            location: classpath:certs/java-grpc.jks
+            password: java-grpc
+            type: JKS
+          key.password: java-grpc
+
+----
+
+2.Client app configurations
+----
+    grpc:
+    server:
+      port: 9091
+    client:
+      channels:
+        product-service:
+          address: "static://localhost:9090"
+#          negotiation-type: plaintext
+          ssl:
+            bundle: product-ssl
+          negotiation-type: TLS
+  ssl:
+    bundle:
+      jks:
+        product-ssl:
+          truststore:
+            location: classpath:certs/java-grpc.jks
+            password: java-grpc
+            type: JKS
+
+----
+
+- Generate certification for tools (like postman, bruno, etc.) to communicate with application and upload before dealing with gRPC APIs.
+
+----
+
+keytool -importkeystore -srckeystore java-grpc.jks -destkeystore java-grpc.p12 -deststoretype PKCS12
+----
+
 == Runtime Configuration
 
 [cols="1,2,2"]
